@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "NEW_CAR",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "NEW_CAR",
+                "resourceId": "/NEW_CAR"
+            },
+            "connections": [
+                {
+                    "name": "SEGGER J-Link Emulator_0",
+                    "cores": [
+                        {
+                            "name": "CORTEX_M0P",
+                            "debuggerSettings": {
+                                "data": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n<PropertyValues/>\n"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "car2025_10_13",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "car2025_10_13",
+                "resourceId": "/car2025_10_13"
+            }
+        }
+    ]
+}
