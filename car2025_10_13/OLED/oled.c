@@ -2,24 +2,7 @@
 
 
 
-#if defined OLED_IIC_MODE
-uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
-{
-    switch (msg)
-    {
-        case U8X8_MSG_DELAY_MILLI:
-            delay_ms(arg_int);
-            break;
-        case U8X8_MSG_GPIO_I2C_CLOCK: 
-            OLED_SCLK_Write(arg_int);
-            break;                    
-        case U8X8_MSG_GPIO_I2C_DATA:  
-            OLED_SDIN_Write(arg_int);
-            break; 
-    }
-    return 1;
-}
-#else
+
 uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
     switch (msg)
@@ -45,12 +28,11 @@ uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *ar
             OLED_DC_Write(arg_int);
             break;
         case U8X8_MSG_GPIO_RESET:
-            OLED_RST_Write(arg_int);
+            OLED_RES_Write(arg_int);
             break;
     }
     return 1;
 }
-#endif
 
 void GPIO_Init(void)
 {
@@ -59,6 +41,7 @@ void GPIO_Init(void)
 }
 void u8g2Init(u8g2_t *u8g2)
 {	
+    //u8g2_Setup_ssd1306_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_4wire_sw_spi, u8x8_gpio_and_delay);//spi
     u8g2_Setup_ssd1306_i2c_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_sw_i2c, u8x8_gpio_and_delay);
     u8g2_InitDisplay(u8g2);
     u8g2_SetPowerSave(u8g2, 0);//开启显示
