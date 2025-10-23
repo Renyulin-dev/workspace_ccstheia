@@ -7,7 +7,11 @@ uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *ar
 {
     switch (msg)
     {
-        case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        case U8X8_MSG_GPIO_I2C_DATA:
+            OLED_SDIN_Write(arg_int); 
+            break;
+        case U8X8_MSG_GPIO_I2C_CLOCK:
+            OLED_SCLK_Write(arg_int); 
             break;
         case U8X8_MSG_GPIO_SPI_DATA:
             OLED_SDIN_Write(arg_int); 
@@ -20,7 +24,7 @@ uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *ar
             break;
         // case U8X8_MSG_DELAY_10MICRO:
         //     delay_us(arg_int*10); 
-            break;
+        //     break;
         case U8X8_MSG_GPIO_CS:
             OLED_CS_Write(arg_int);
             break;

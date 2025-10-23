@@ -27,7 +27,7 @@ char*** directory[]=
     },
     (char**[]){//二级目录
         //一级目录下目录一对应二级目录
-        (char*[]){"speed+","speed-","ON","OFF",NULL},
+        (char*[]){"ON","OFF","speed+","speed-","trun+","trun-",NULL},
         (char*[]){"MIN+","MIN-","MAX+","MAX-",NULL},
         (char*[]){"0","1","2","3","4","5","!1!",NULL},
         (char*[]){"P+","P-","I+","I-","D+","D-",NULL},
@@ -40,7 +40,7 @@ int* directory_num[]=
     //一级目录项目数
     (int[]){5,-1},
     //二级目录项目数
-    (int[]){4,4,7,6,8,-1}
+    (int[]){6,4,7,6,8,-1}
 };
 
 void xianshuc(void){
@@ -129,19 +129,25 @@ int xspeed = 180;
 void CAR_control(void){
     switch (id[1][0]+id[1][1]) {
     case 0:
-        xspeed += 10;
-        break;
-    case 1:
-        xspeed -= 10;
-        break;
-    case 2:
         stop_flag = false;
         car_speed = xspeed;
         now_speed = car_speed;
         car_begin_yaw = yaw;
         break;
-    case 3:
+        break;
+    case 1:
         stop_flag = true;
+        break;
+    case 2:
+        xspeed += 10;
+    case 3:
+        xspeed -= 10;
+        break;
+    case 4:
+        MAX_CORRECTION += 10;
+        break;
+    case 5:
+        MAX_CORRECTION -= 10;
         break;
     default:
         break;

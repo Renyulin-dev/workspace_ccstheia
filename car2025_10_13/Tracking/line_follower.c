@@ -15,7 +15,6 @@ int l_num = 0;                     // 左转次数计数
 int r_num = 0;                     // 右转次数计数
 int gyro_l_num = 0;                // 陀螺仪检测到的左转次数
 int gyro_r_num = 0;                // 陀螺仪检测到的右转次数
-int lr = MAX_CORRECTION;           // 修正值参考
 static float error = 0.0f;         // 当前误差
 static float last_error = 0.0f;    // 上一次误差
 static float integral = 0.0f;      // 积分值
@@ -23,6 +22,7 @@ static int turn_flag = 0;          // 转向标志：-1左转 1右转 0无转向
 static unsigned long now_time = 0; // 当前时间戳
 float car_begin_yaw;               // 直线行驶时的初始yaw角
 float angle_diff = 0;              // 角度变化值
+int MAX_CORRECTION = 150;          // 最大转弯修正值
 
 
 // 转弯修正系数

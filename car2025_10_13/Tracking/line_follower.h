@@ -12,7 +12,6 @@
 #define REGISTER_READ_ADDRESS     0x41        // 寄存器读地址
 
 // 控制相关常量
-#define MAX_CORRECTION            150         // 最大转弯修正值
 #define SENSOR_COUNT              8           // 传感器数量
 #define HISTORY_LENGTH            6           // 历史状态长度
 #define MAX_INTEGRAL              80.0f       // 积分项最大值
@@ -22,7 +21,7 @@
 
 // 外部变量声明
 extern int l_num, r_num;                    // 左右转计数
-extern int lr;                              // 修正值参考
+extern int MAX_CORRECTION;
 extern float correction_factor1, correction_factor2, correction_factor3, correction_factor4; // 转弯修正系数
 extern float car_begin_yaw;
 
