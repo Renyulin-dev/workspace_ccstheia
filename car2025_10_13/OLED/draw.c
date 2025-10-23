@@ -134,12 +134,12 @@ void CAR_control(void){
         now_speed = car_speed;
         car_begin_yaw = yaw;
         break;
-        break;
     case 1:
         stop_flag = true;
         break;
     case 2:
         xspeed += 10;
+        break;
     case 3:
         xspeed -= 10;
         break;
@@ -240,15 +240,18 @@ void HOME_directory(u8g2_t *u8g2) {
     if(directory_flag == 1)
     {
         if(id[0][0]+id[0][1]==0){
-            u8g2_DrawUTF8(u8g2, 80, 30, "speed:");
+            u8g2_DrawUTF8(u8g2, 60, 30, "speed:");
             sprintf((char *)oled_buffer, "%d", xspeed);
+            u8g2_DrawUTF8(u8g2, 100, 30, oled_buffer);
+            u8g2_DrawUTF8(u8g2, 60, 46, "trun:");
+            sprintf((char *)oled_buffer, "%d", MAX_CORRECTION);
             u8g2_DrawUTF8(u8g2, 100, 46, oled_buffer);
         }
         if(id[0][0]+id[0][1]==1){
-            u8g2_DrawUTF8(u8g2, 60, 30 , "MIN:");
+            u8g2_DrawUTF8(u8g2, 60, 30, "MIN:");
             sprintf((char *)oled_buffer, "%d", MIN);
             u8g2_DrawUTF8(u8g2, 90, 30, oled_buffer);
-            u8g2_DrawUTF8(u8g2, 60, 46 , "MAX:");
+            u8g2_DrawUTF8(u8g2, 60, 46, "MAX:");
             sprintf((char *)oled_buffer, "%d", MAX);
             u8g2_DrawUTF8(u8g2, 90, 46, oled_buffer);
         }
