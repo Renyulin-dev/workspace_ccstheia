@@ -23,6 +23,7 @@
 extern int l_num, r_num;                    // 左右转计数
 extern int MAX_CORRECTION;
 extern float correction_factor1, correction_factor2, correction_factor3, correction_factor4; // 转弯修正系数
+extern float car_straight_yaw;
 extern float car_begin_yaw;
 
 /**

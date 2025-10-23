@@ -20,7 +20,8 @@ static float last_error = 0.0f;    // 上一次误差
 static float integral = 0.0f;      // 积分值
 static int turn_flag = 0;          // 转向标志：-1左转 1右转 0无转向
 static unsigned long now_time = 0; // 当前时间戳
-float car_begin_yaw;               // 直线行驶时的初始yaw角
+float car_straight_yaw;            // 直线行驶时的初始yaw角
+float car_begin_yaw;               // 行驶开始时的初始yaw角
 float angle_diff = 0;              // 角度变化值
 int MAX_CORRECTION = 150;          // 最大转弯修正值
 
@@ -35,6 +36,7 @@ float correction_factor4 = 6.0f;   // 强修正
 static bool right_flag = false;    // 右转标志
 static bool left_flag = false;     // 左转标志
 static bool timer_flag = false;    // 定时器标志
+static bool mode_flag = false;     // 回转标志
 
 // 传感器状态历史，用于滤波
 static uint8_t sensor_state_history[HISTORY_LENGTH];
@@ -122,11 +124,11 @@ static void parse_sensor_data(uint8_t sensor_data, uint8_t s[]) {
 
 /**
  * @brief yaw角换算
- * @param car_begin_yaw 直线时角度
+ * @param car_straight_yaw 直线时角度
  * @return 与直线时差值
  */
-float angle_calculation(float car_begin_yaw) {
-    float Angle_difference = car_begin_yaw - yaw;
+float angle_calculation(float car_straight_yaw) {
+    float Angle_difference = car_straight_yaw - yaw;
     // 调整角度差到[-180, 180]范围
     if (Angle_difference <= -180) Angle_difference += 360;
     if (Angle_difference >= 180) Angle_difference -= 360;
@@ -150,7 +152,7 @@ float line_follower(float kp, float ki, float kd)
     uint8_t s[8]; // 传感器状态数组
     uint8_t current_state;
     
-    angle_diff = angle_calculation(car_begin_yaw);
+    angle_diff = angle_calculation(car_straight_yaw);
 
     // 读取传感器数据（添加错误处理）
     if (mspm0_xj_i2c_read(IIC_ADDRESS, REGISTER_READ_ADDRESS, 1, IRbuf) != 0) {
@@ -206,7 +208,7 @@ float line_follower(float kp, float ki, float kd)
     
     // 当陀螺仪检测到的旋转角度大于85度时，判断旋转方向并更新计数
     if (fabs(angle_diff) >= 80.0f) {
-        car_begin_yaw = yaw;
+        car_straight_yaw = yaw;
         if (angle_diff > 0) {
             // 角度差为正，判定为右转
             gyro_r_num++;
@@ -270,7 +272,7 @@ float line_follower(float kp, float ki, float kd)
     } else if (s[0] && s[1] && s[2] && !s[3] && !s[4] && s[5] && s[6] && s[7]) {
         /* 1 1 1 0 0 1 1 1 */
         error = 0.0f;
-        car_begin_yaw = yaw;
+        car_straight_yaw = yaw;
     }
     
     // 左转逻辑
@@ -352,7 +354,7 @@ void c_control(void)
 {
     // 调用line_follower函数获取差速值，仅在car_speed不为零时计算
     car_run(now_speed, car_speed ? line_follower(P, I, D) : 0);
-    //printf("记录角度:%.2f,当前角度:%.2f,变化值:%.2f,传感器计数:%d,陀螺仪计数:%d", car_begin_yaw, yaw, angle_diff, l_num, gyro_l_num);
+    //printf("记录角度:%.2f,当前角度:%.2f,变化值:%.2f,传感器计数:%d,陀螺仪计数:%d", car_straight_yaw, yaw, angle_diff, l_num, gyro_l_num);
     
     // 检查是否完成指定圈数
     if (((l_num > 0 && (l_num - 1) / 4 == quanshu)) || 

@@ -132,6 +132,7 @@ void CAR_control(void){
         stop_flag = false;
         car_speed = xspeed;
         now_speed = car_speed;
+        car_straight_yaw = yaw;
         car_begin_yaw = yaw;
         break;
     case 1:
