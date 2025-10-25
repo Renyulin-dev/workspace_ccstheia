@@ -96,6 +96,7 @@ void Calibration_waiting(u8g2_t *u8g2)
 void quanshukongzi(void){
     l_num = 0;
     r_num = 0;
+    mode_flag = false;
     switch (id[1][0]+id[1][1]) {
     case 0:
         quanshu = 0;
@@ -104,7 +105,7 @@ void quanshukongzi(void){
         quanshu = 1;
         break;
     case 2:
-        quanshu =2;
+        quanshu = 2;
         break;
     case 3:
         quanshu = 3;
@@ -113,10 +114,11 @@ void quanshukongzi(void){
         quanshu = 4;
         break;
     case 5:
-        quanshu =5;
+        quanshu = 5;
         break;
     case 6:
-        quanshu = 1;
+        quanshu = 2;
+        mode_flag = true;
         printf("no1isrun");
         break;
     default:

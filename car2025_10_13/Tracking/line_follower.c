@@ -10,6 +10,10 @@
 // 传感器数据缓冲区
 static unsigned char IRbuf[1];
 
+float out;
+float out1;
+float out2;
+
 // 全局变量
 int l_num = 0;                     // 左转次数计数
 int r_num = 0;                     // 右转次数计数
@@ -36,7 +40,9 @@ float correction_factor4 = 6.0f;   // 强修正
 static bool right_flag = false;    // 右转标志
 static bool left_flag = false;     // 左转标志
 static bool timer_flag = false;    // 定时器标志
-static bool mode_flag = false;     // 回转标志
+
+bool mode_flag = false;            // 回转标志
+bool angle_correction_flag = true; // 允许回转标志
 
 // 传感器状态历史，用于滤波
 static uint8_t sensor_state_history[HISTORY_LENGTH];
@@ -136,14 +142,103 @@ float angle_calculation(float car_straight_yaw) {
 }
 
 /**
+ * @brief 判断并执行回转以修正角度
+ */
+void angle_correction(){
+    if((l_num % 5 == 0 && l_num != 0)){
+        // 初始化角度计算变量
+        float start_yaw = yaw;        // 记录起始角度
+        float current_yaw = yaw;      // 当前角度
+        float previous_yaw = yaw;     // 上一次角度
+        float total_rotation = 0;     // 累计旋转角度
+        float angle_diff;             // 相邻两次采样的角度差
+        angle_correction_flag = false;
+        
+        // 旋转控制循环
+        while(1){
+            // 控制小车旋转
+            car_run(0, -MAX_CORRECTION);
+            
+            // 获取当前角度
+            current_yaw = yaw;
+            
+            // 计算相邻两次采样的角度差，处理闭环圆特性
+            angle_diff = current_yaw - previous_yaw;
+            
+            // 处理角度跳变问题（如179°到-179°的过渡）
+            if (angle_diff > 180.0f) {
+                angle_diff -= 360.0f;  // 处理逆时针跳变
+            } else if (angle_diff < -180.0f) {
+                angle_diff += 360.0f;  // 处理顺时针跳变
+            }
+            
+            // 累计旋转角度
+            total_rotation += angle_diff;
+            
+            // 更新上一次角度
+            previous_yaw = current_yaw;
+            
+            // 输出当前累计旋转角度（调试用）
+            out = -total_rotation;
+            
+            // 判断是否完成280度旋转（考虑顺时针旋转）
+            if (total_rotation <= -280.0f) {
+                break;
+            }
+        }
+    }
+    if((r_num % 5 == 0 && r_num != 0)){
+        // 初始化角度计算变量
+        float start_yaw = yaw;        // 记录起始角度
+        float current_yaw = yaw;      // 当前角度
+        float previous_yaw = yaw;     // 上一次角度
+        float total_rotation = 0;     // 累计旋转角度
+        float angle_diff;             // 相邻两次采样的角度差
+        angle_correction_flag = false;
+        
+        // 旋转控制循环
+        while(1){
+            // 控制小车旋转
+            car_run(0, MAX_CORRECTION);
+            
+            // 获取当前角度
+            current_yaw = yaw;
+            
+            // 计算相邻两次采样的角度差，处理闭环圆特性
+            angle_diff = current_yaw - previous_yaw;
+            
+            // 处理角度跳变问题（如179°到-179°的过渡）
+            if (angle_diff > 180.0f) {
+                angle_diff -= 360.0f;  // 处理逆时针跳变
+            } else if (angle_diff < -180.0f) {
+                angle_diff += 360.0f;  // 处理顺时针跳变
+            }
+            
+            // 累计旋转角度
+            total_rotation += angle_diff;
+            
+            // 更新上一次角度
+            previous_yaw = current_yaw;
+            
+            // 输出当前累计旋转角度（调试用）
+            out = total_rotation;
+            
+            // 判断是否完成280度旋转（考虑逆时针旋转）
+            if (total_rotation >= 280.0f) {
+                break;
+            }
+        }
+    }
+}
+
+/**
  * @brief 计算PID控制输出
  * @param kp 比例系数
  * @param ki 积分系数
  * @param kd 微分系数
  * @return PID控制输出值
  */
-float line_follower(float kp, float ki, float kd)
-{
+float line_follower(float kp, float ki, float kd){
     // 验证参数有效性
     if (kp < 0 || ki < 0 || kd < 0) {
         return 0.0f; // 参数无效，返回默认值
@@ -168,7 +263,7 @@ float line_follower(float kp, float ki, float kd)
     
     // 更新当前速度
     now_speed = car_speed;
-    
+
     // 处理蜂鸣器和定时器逻辑
     if (tick_ms - now_time > BEEP_DURATION_MS) {
         DL_GPIO_clearPins(BEEP_PORT, BEEP_PIN_21_PIN);
@@ -354,9 +449,11 @@ void c_control(void)
 {
     // 调用line_follower函数获取差速值，仅在car_speed不为零时计算
     car_run(now_speed, car_speed ? line_follower(P, I, D) : 0);
-    //printf("记录角度:%.2f,当前角度:%.2f,变化值:%.2f,传感器计数:%d,陀螺仪计数:%d", car_straight_yaw, yaw, angle_diff, l_num, gyro_l_num);
-    
+    if(mode_flag && angle_correction_flag)angle_correction();
+    if((l_num % 6 == 0 && l_num != 0) || (r_num % 6 == 0 && r_num != 0))angle_correction_flag = true;
     // 检查是否完成指定圈数
+    out1 = car_begin_yaw - yaw <= 0 ? car_begin_yaw - yaw :car_begin_yaw - yaw - 360;
+    out2 = car_begin_yaw - yaw >= 0 ? car_begin_yaw - yaw :car_begin_yaw - yaw + 360;
     if (((l_num > 0 && (l_num - 1) / 4 == quanshu)) || 
         ((r_num > 0 && (r_num - 1) / 4 == quanshu))) {
         // 停止车辆

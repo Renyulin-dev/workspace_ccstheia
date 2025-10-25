@@ -25,6 +25,7 @@ extern int MAX_CORRECTION;
 extern float correction_factor1, correction_factor2, correction_factor3, correction_factor4; // 转弯修正系数
 extern float car_straight_yaw;
 extern float car_begin_yaw;
+extern bool mode_flag;
 
 /**
  * @brief 计算PID控制输出
@@ -34,6 +35,7 @@ extern float car_begin_yaw;
  * @return PID控制输出值
  */
 float line_follower(float kp, float ki, float kd);
+float angle_calculation(float car_straight_yaw);
 
 /**
  * @brief 车辆控制主函数
