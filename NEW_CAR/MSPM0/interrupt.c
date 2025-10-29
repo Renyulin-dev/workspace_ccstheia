@@ -35,13 +35,10 @@ void GROUP1_IRQHandler(void)
                 while(DL_GPIO_readPins(GPIO_KEYS_PORT, GPIO_KEYS_PIN_22_PIN)>0);
             }
             
-            Read_Quad();                    //异常未触发移动到此处强制触发
-        break;
-        
-        
-        //case GPIO_MPU6050_PIN_INT_IIDX://GPIO_MPU6050_PIN_INT_IIDX中断未正常触发
-            // Read_Quad();
-            // break;
-        
+            if(DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1) == GPIO_MPU6050_PIN_INT_IIDX)Read_Quad();
+            break;
+            
+        default:
+            break;    
     }
 }

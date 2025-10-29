@@ -200,8 +200,8 @@ UART1.$name                    = "UART_0";
 UART1.uartClkSrc               = "MFCLK";
 UART1.enabledInterrupts        = ["RX"];
 UART1.peripheral.$assign       = "UART1";
-UART1.peripheral.rxPin.$assign = "PB7";
-UART1.peripheral.txPin.$assign = "PB6";
+UART1.peripheral.rxPin.$assign = "PA9";
+UART1.peripheral.txPin.$assign = "PA8";
 UART1.txPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric2";
 UART1.rxPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric7";
 

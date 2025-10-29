@@ -23,7 +23,7 @@ int quanshu = 1;
 char*** directory[]=
 {
     (char**[]){//一级目录
-        (char*[]){"速度控制","限速","圈数","PID","中边",NULL}
+        (char*[]){"速度控制","限速","圈数","PID","中边","other",NULL}
     },
     (char**[]){//二级目录
         //一级目录下目录一对应二级目录
@@ -31,16 +31,17 @@ char*** directory[]=
         (char*[]){"MIN+","MIN-","MAX+","MAX-",NULL},
         (char*[]){"0","1","2","3","4","5","!1!",NULL},
         (char*[]){"P+","P-","I+","I-","D+","D-",NULL},
-        (char*[]){"z1+","z1-","z2+","z2-","z3+","z3-","z4+","z4-",NULL}
+        (char*[]){"z1+","z1-","z2+","z2-","z3+","z3-","z4+","z4-",NULL},
+        (char*[]){"PTZ_MODE=0","PTZ_MODE=1","PTZ_MODE=2","LASER_MODE=0","LASER_MODE=1","LASER_MODE=2",NULL}
     },
 };
 //存储每级目录项目数
 int* directory_num[]=
 {
     //一级目录项目数
-    (int[]){5,-1},
+    (int[]){6,-1},
     //二级目录项目数
-    (int[]){6,4,7,6,8,-1}
+    (int[]){6,4,7,6,8,6,-1}
 };
 
 void xianshuc(void){
@@ -119,7 +120,6 @@ void quanshukongzi(void){
     case 6:
         quanshu = 2;
         mode_flag = true;
-        printf("no1isrun");
         break;
     default:
         break;
@@ -136,6 +136,7 @@ void CAR_control(void){
         now_speed = car_speed;
         car_straight_yaw = yaw;
         car_begin_yaw = yaw;
+        if(mode_flag)printf("LASER_MODE=1\r\n");
         break;
     case 1:
         stop_flag = true;
@@ -182,6 +183,31 @@ void PID_control(void){
     }
 }
 
+void other_control(void){
+    switch (id[1][0]+id[1][1]) {
+    case 0:
+        printf("PTZ_MODE=0\r\n");
+        break;
+    case 1:
+        printf("PTZ_MODE=1\r\n");
+        break;
+    case 2:
+        printf("PTZ_MODE=2\r\n");
+        break;
+    case 3:
+        printf("LASER_MODE=0\r\n");
+        break;
+    case 4:
+        printf("LASER_MODE=1\r\n");
+        break;
+    case 5:
+        printf("LASER_MODE=2\r\n");
+        break;
+    default:
+        break;
+    }
+}
+
 void zb_control(void){
     switch (id[1][0]+id[1][1]) {
     case 0:
@@ -216,12 +242,19 @@ void zb_control(void){
 void HOME_directory(u8g2_t *u8g2) {
     int lasttopid,lastnowid;
      //二级控制
-    if(directory_flag == 2 && (id[0][0]+id[0][1] == 0 || id[0][0]+id[0][1] == 1 || id[0][0]+id[0][1] == 2||id[0][0]+id[0][1]==3||id[0][0]+id[0][1]==4)){
+    if(directory_flag == 2 
+    && (id[0][0]+id[0][1] == 0 
+    || id[0][0]+id[0][1] == 1 
+    || id[0][0]+id[0][1] == 2
+    || id[0][0]+id[0][1] == 3
+    || id[0][0]+id[0][1] == 4
+    || id[0][0]+id[0][1] == 5)){
         if(id[0][0]+id[0][1]==0)CAR_control();
         if(id[0][0]+id[0][1]==1)xianshuc();
         if(id[0][0]+id[0][1]==2)quanshukongzi();
         if(id[0][0]+id[0][1]==3)PID_control();
         if(id[0][0]+id[0][1]==4)zb_control();
+        if(id[0][0]+id[0][1]==5)other_control();
         directory_flag = 1;
     }
     else if(directory_flag == 2)directory_flag = 1;

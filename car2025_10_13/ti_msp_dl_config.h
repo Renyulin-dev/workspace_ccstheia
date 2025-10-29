@@ -171,9 +171,9 @@ extern "C" {
 #define GPIO_UART_0_IOMUX_TX                                     (IOMUX_PINCM19)
 #define GPIO_UART_0_IOMUX_RX_FUNC                      IOMUX_PINCM20_PF_UART1_RX
 #define GPIO_UART_0_IOMUX_TX_FUNC                      IOMUX_PINCM19_PF_UART1_TX
-#define UART_0_BAUD_RATE                                                (115200)
-#define UART_0_IBRD_4_MHZ_115200_BAUD                                        (2)
-#define UART_0_FBRD_4_MHZ_115200_BAUD                                       (11)
+#define UART_0_BAUD_RATE                                                  (9600)
+#define UART_0_IBRD_4_MHZ_9600_BAUD                                         (26)
+#define UART_0_FBRD_4_MHZ_9600_BAUD                                          (3)
 /* Defines for UART_1 */
 #define UART_1_INST                                                        UART0
 #define UART_1_INST_FREQUENCY                                            4000000
@@ -201,6 +201,17 @@ extern "C" {
 /* Defines for PIN_21: GPIOA.21 with pinCMx 46 on package pin 39 */
 #define BEEP_PIN_21_PIN                                         (DL_GPIO_PIN_21)
 #define BEEP_PIN_21_IOMUX                                        (IOMUX_PINCM46)
+/* Port definition for Pin Group GPIO_MPU6050 */
+#define GPIO_MPU6050_PORT                                                (GPIOA)
+
+/* Defines for PIN_INT: GPIOA.28 with pinCMx 3 on package pin 3 */
+// groups represented: ["GPIO_KEYS","GPIO_MPU6050"]
+// pins affected: ["PIN_26","PIN_25","PIN_24","PIN_22","PIN_INT"]
+#define GPIO_MULTIPLE_GPIOA_INT_IRQN                            (GPIOA_INT_IRQn)
+#define GPIO_MULTIPLE_GPIOA_INT_IIDX            (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
+#define GPIO_MPU6050_PIN_INT_IIDX                           (DL_GPIO_IIDX_DIO28)
+#define GPIO_MPU6050_PIN_INT_PIN                                (DL_GPIO_PIN_28)
+#define GPIO_MPU6050_PIN_INT_IOMUX                                (IOMUX_PINCM3)
 /* Defines for PIN_RES: GPIOB.8 with pinCMx 25 on package pin 22 */
 #define GPIO_OLED_PIN_RES_PORT                                           (GPIOB)
 #define GPIO_OLED_PIN_RES_PIN                                    (DL_GPIO_PIN_8)
@@ -234,10 +245,6 @@ extern "C" {
 #define GPIO_KEYS_PORT                                                   (GPIOA)
 
 /* Defines for PIN_26: GPIOA.26 with pinCMx 59 on package pin 46 */
-// groups represented: ["GPIO_MPU6050","GPIO_KEYS"]
-// pins affected: ["PIN_INT","PIN_26","PIN_25","PIN_24","PIN_22"]
-#define GPIO_MULTIPLE_GPIOA_INT_IRQN                            (GPIOA_INT_IRQn)
-#define GPIO_MULTIPLE_GPIOA_INT_IIDX            (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
 #define GPIO_KEYS_PIN_26_IIDX                               (DL_GPIO_IIDX_DIO26)
 #define GPIO_KEYS_PIN_26_PIN                                    (DL_GPIO_PIN_26)
 #define GPIO_KEYS_PIN_26_IOMUX                                   (IOMUX_PINCM59)
@@ -253,13 +260,6 @@ extern "C" {
 #define GPIO_KEYS_PIN_22_IIDX                               (DL_GPIO_IIDX_DIO22)
 #define GPIO_KEYS_PIN_22_PIN                                    (DL_GPIO_PIN_22)
 #define GPIO_KEYS_PIN_22_IOMUX                                   (IOMUX_PINCM47)
-/* Port definition for Pin Group GPIO_MPU6050 */
-#define GPIO_MPU6050_PORT                                                (GPIOA)
-
-/* Defines for PIN_INT: GPIOA.28 with pinCMx 3 on package pin 3 */
-#define GPIO_MPU6050_PIN_INT_IIDX                           (DL_GPIO_IIDX_DIO28)
-#define GPIO_MPU6050_PIN_INT_PIN                                (DL_GPIO_PIN_28)
-#define GPIO_MPU6050_PIN_INT_IOMUX                                (IOMUX_PINCM3)
 
 /* clang-format on */
 

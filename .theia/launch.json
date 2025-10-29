@@ -31,6 +31,28 @@
                 "name": "car2025_10_13",
                 "resourceId": "/car2025_10_13"
             }
+        },
+        {
+            "name": "TICK",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "TICK",
+                "resourceId": "/TICK"
+            },
+            "connections": [
+                {
+                    "name": "Texas Instruments XDS110 USB Debug Probe",
+                    "cores": [
+                        {
+                            "name": "CORTEX_M0P",
+                            "debuggerSettings": {
+                                "data": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n<PropertyValues/>\n"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

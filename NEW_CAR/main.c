@@ -38,7 +38,6 @@ void MSPM0_Init(){
     DL_GPIO_setPins(LED_PORT,LED_PIN_12_PIN);
     DL_GPIO_clearPins(LED_PORT,LED_PIN_13_PIN);
     SysTick_Init();
-    NVIC_EnableIRQ(GPIO_MULTIPLE_GPIOA_INT_IRQN);
     MPU6050_Init();
     UART_Init();
 }
