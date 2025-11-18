@@ -4,6 +4,7 @@
 #include "hw_encoder.h"
 #include "hw_timer.h"
 #include "uart.h"
+#include "electrical_machinery.h"
 
 void delay_ms(unsigned int ms)
 {
@@ -19,18 +20,42 @@ void delay_ms(unsigned int ms)
         }
     }
 }
+
+float Velcity_Kp=1,  Velcity_Ki=1,  Velcity_Kd;
+
+int Velocity_A(int TargetVelocity, int CurrentVelocity)
+{  
+    int Bias;  //定义相关变量
+		static int ControlVelocity, Last_bias; //静态变量，函数调用结束后其值依然存在
+		
+		Bias=TargetVelocity-CurrentVelocity; //求速度偏差
+		
+		ControlVelocity+=Velcity_Kp*(Bias-Last_bias)+Velcity_Ki*Bias;  //增量式PI控制器
+                                                                   //Velcity_Kp*(Bias-Last_bias) 作用为限制加速度
+	                                                                 //Velcity_Ki*Bias             速度控制值由Bias不断积分得到 偏差越大加速度越大
+		if(ControlVelocity>99)ControlVelocity=99;
+		if(ControlVelocity<-99)ControlVelocity=-99;
+		Last_bias=Bias;	
+        printf("ControlVelocity = %d ",ControlVelocity);
+		return ControlVelocity; //返回速度控制值
+}
+
 int main(void)
 {
     SYSCFG_DL_init();
+    DL_TimerG_startCounter(PWMA_INST);
 	//编码器初始化
 	encoder_init();
 	UART_Init();
 	//定时器初始化
 	timer_init();
-
+    DL_GPIO_setPins(GPIO_TB6612_STBY_PORT, GPIO_TB6612_STBY_PIN);
+    DL_GPIO_clearPins(GPIO_TB6612_AIN1_PORT, GPIO_TB6612_AIN1_PIN);
+    DL_GPIO_setPins(GPIO_TB6612_AIN2_PORT, GPIO_TB6612_AIN2_PIN);
     while (1)
-	{
-		delay_ms(1000);
+	{   
+        car_speed(Velocity_A(40,get_encoder_count()));
 		printf("count :%d,dir :%d,temp_count :%lld\n",get_encoder_count(),get_encoder_dir(),get_encoder_temp_count());
+        delay_ms(99);
     }
 }

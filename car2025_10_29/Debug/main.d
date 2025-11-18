@@ -85,7 +85,8 @@ main.o: ../main.c ../main.h ../ti_msp_dl_config.h \
  C:/Users/renyu/workspace_ccstheia/car2025_10_29/MSPM0/electrical_machinery.h \
  C:/Users/renyu/workspace_ccstheia/car2025_10_29/Tracking/line_follower.h \
  C:/Users/renyu/workspace_ccstheia/car2025_10_29/UART/uart.h \
- C:/Users/renyu/workspace_ccstheia/car2025_10_29/MPU6050/mpu6050.h
+ C:/Users/renyu/workspace_ccstheia/car2025_10_29/MPU6050/mpu6050.h \
+ C:/Users/renyu/workspace_ccstheia/car2025_10_29/MSPM0/mspm0_xj_i2c.h
 ../main.h:
 ../ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_04_00_06/source/ti/devices/msp/msp.h:
@@ -173,3 +174,4 @@ C:/Users/renyu/workspace_ccstheia/car2025_10_29/MSPM0/electrical_machinery.h:
 C:/Users/renyu/workspace_ccstheia/car2025_10_29/Tracking/line_follower.h:
 C:/Users/renyu/workspace_ccstheia/car2025_10_29/UART/uart.h:
 C:/Users/renyu/workspace_ccstheia/car2025_10_29/MPU6050/mpu6050.h:
+C:/Users/renyu/workspace_ccstheia/car2025_10_29/MSPM0/mspm0_xj_i2c.h:

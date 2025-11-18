@@ -15,7 +15,7 @@ SHELL = cmd.exe
 build-1827467999: ../empty.syscfg
 	@echo 'Building file: "$<"'
 	@echo 'Invoking: SysConfig'
-	"C:/ti/sysconfig_1.23.1/sysconfig_cli.bat" --script "C:/Users/renyu/workspace_ccstheia/TICK/empty.syscfg" -o "." -s "C:/ti/mspm0_sdk_2_04_00_06/.metadata/product.json" --compiler ticlang
+	"C:/ti/sysconfig_1.23.1/sysconfig_cli.bat" --script "C:/Users/renyu/workspace_ccstheia/TICK/empty.syscfg" -o "." -s "C:/ti/mspm0_sdk_2_04_00_06/.metadata/product.json" -d "MSPM0G350X" -p "LQFP-64(PM)" -r "Default" --context "system" --compiler ticlang
 	@echo 'Finished building: "$<"'
 	@echo ' '
 

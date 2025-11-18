@@ -1,7 +1,7 @@
 ******************************************************************************
             TI ARM Clang Linker PC v4.0.3                      
 ******************************************************************************
->> Linked Wed Oct 29 14:36:50 2025
+>> Linked Sat Nov  1 15:49:14 2025
 
 OUTPUT FILE NAME:   <car2025_10_13.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000a8e5
@@ -620,7 +620,7 @@ section   page    origin      length       input sections
                   202005e0    00000004     (.common:start_time)
                   202005e4    00000004     (.common:tick_ms)
                   202005e8    00000004     (.common:yaw)
-                  202005ec    00000001     line_follower.o (.bss.IRbuf)
+                  202005ec    00000001     (.common:IRbuf)
                   202005ed    00000001     (.common:more)
 
 .data      0    202005f0    00000358     UNINITIALIZED
@@ -924,6 +924,7 @@ address   name
 202005b0  I                                     
 0000b781  I2C0_IRQHandler                       
 0000b781  I2C1_IRQHandler                       
+202005ec  IRbuf                                 
 202005b4  L                                     
 202008cc  MAX                                   
 202008d0  MAX_CORRECTION                        
@@ -1652,6 +1653,7 @@ address   name
 202005e0  start_time                            
 202005e4  tick_ms                               
 202005e8  yaw                                   
+202005ec  IRbuf                                 
 202005ed  more                                  
 202005f0  _ftable                               
 202008af  angle_correction_flag                 
@@ -1691,4 +1693,4 @@ ffffffff  binit
 UNDEFED   __mpu_init                            
 UNDEFED   _system_post_cinit                    
 
-[397 symbols]
+[398 symbols]

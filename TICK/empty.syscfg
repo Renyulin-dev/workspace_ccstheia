@@ -1,8 +1,8 @@
 /**
  * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
  * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
- * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-48(PT)" --product "mspm0_sdk@2.04.00.06"
- * @v2CliArgs --device "MSPM0G3507" --package "LQFP-48(PT)" --product "mspm0_sdk@2.04.00.06"
+ * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-64(PM)" --product "mspm0_sdk@2.04.00.06"
+ * @v2CliArgs --device "MSPM0G3507" --package "LQFP-64(PM)" --product "mspm0_sdk@2.04.00.06"
  * @versions {"tool":"1.23.1+4034"}
  */
 
@@ -11,6 +11,9 @@
  */
 const GPIO   = scripting.addModule("/ti/driverlib/GPIO", {}, false);
 const GPIO1  = GPIO.addInstance();
+const GPIO2  = GPIO.addInstance();
+const PWM    = scripting.addModule("/ti/driverlib/PWM", {}, false);
+const PWM1   = PWM.addInstance();
 const SYSCTL = scripting.addModule("/ti/driverlib/SYSCTL");
 const TIMER  = scripting.addModule("/ti/driverlib/TIMER", {}, false);
 const TIMER1 = TIMER.addInstance();
@@ -30,18 +33,41 @@ GPIO1.associatedPins[0].direction         = "INPUT";
 GPIO1.associatedPins[0].interruptEn       = true;
 GPIO1.associatedPins[0].interruptPriority = "0";
 GPIO1.associatedPins[0].polarity          = "RISE";
-GPIO1.associatedPins[0].pin.$assign       = "PA8";
+GPIO1.associatedPins[0].pin.$assign       = "PA0";
 GPIO1.associatedPins[1].$name             = "E1B";
 GPIO1.associatedPins[1].direction         = "INPUT";
 GPIO1.associatedPins[1].interruptEn       = true;
 GPIO1.associatedPins[1].interruptPriority = "0";
 GPIO1.associatedPins[1].polarity          = "RISE";
-GPIO1.associatedPins[1].pin.$assign       = "PA9";
+GPIO1.associatedPins[1].pin.$assign       = "PA1";
 
 const Board                       = scripting.addModule("/ti/driverlib/Board", {}, false);
 Board.peripheral.$assign          = "DEBUGSS";
 Board.peripheral.swclkPin.$assign = "PA20";
 Board.peripheral.swdioPin.$assign = "PA19";
+
+GPIO2.$name                         = "GPIO_TB6612";
+GPIO2.associatedPins.create(3);
+GPIO2.associatedPins[0].$name       = "AIN1";
+GPIO2.associatedPins[0].pin.$assign = "PA27";
+GPIO2.associatedPins[1].$name       = "AIN2";
+GPIO2.associatedPins[1].pin.$assign = "PA25";
+GPIO2.associatedPins[2].$name       = "STBY";
+GPIO2.associatedPins[2].pin.$assign = "PB0";
+
+PWM1.$name                              = "PWMA";
+PWM1.ccIndex                            = [0];
+PWM1.clockDivider                       = 8;
+PWM1.clockPrescale                      = 4;
+PWM1.timerCount                         = 100;
+PWM1.PWM_CHANNEL_0.$name                = "ti_driverlib_pwm_PWMTimerCC0";
+PWM1.ccp0PinConfig.direction            = scripting.forceWrite("OUTPUT");
+PWM1.ccp0PinConfig.hideOutputInversion  = scripting.forceWrite(false);
+PWM1.ccp0PinConfig.onlyInternalResistor = scripting.forceWrite(false);
+PWM1.ccp0PinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+PWM1.ccp0PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric2";
+PWM1.peripheral.$assign                 = "TIMG8";
+PWM1.peripheral.ccp0Pin.$assign         = "PA26";
 
 SYSCTL.forceDefaultClkConfig = true;
 SYSCTL.clockTreeEn           = true;

@@ -78,6 +78,20 @@ extern "C" {
 
 
 
+/* Defines for PWMA */
+#define PWMA_INST                                                          TIMG8
+#define PWMA_INST_IRQHandler                                    TIMG8_IRQHandler
+#define PWMA_INST_INT_IRQN                                      (TIMG8_INT_IRQn)
+#define PWMA_INST_CLK_FREQ                                               1000000
+/* GPIO defines for channel 0 */
+#define GPIO_PWMA_C0_PORT                                                  GPIOA
+#define GPIO_PWMA_C0_PIN                                          DL_GPIO_PIN_26
+#define GPIO_PWMA_C0_IOMUX                                       (IOMUX_PINCM59)
+#define GPIO_PWMA_C0_IOMUX_FUNC                      IOMUX_PINCM59_PF_TIMG8_CCP0
+#define GPIO_PWMA_C0_IDX                                     DL_TIMER_CC_0_INDEX
+
+
+
 /* Defines for TIMER_TICK */
 #define TIMER_TICK_INST                                                  (TIMG0)
 #define TIMER_TICK_INST_IRQHandler                              TIMG0_IRQHandler
@@ -110,17 +124,29 @@ extern "C" {
 /* Port definition for Pin Group GPIO_ENCODER */
 #define GPIO_ENCODER_PORT                                                (GPIOA)
 
-/* Defines for E1A: GPIOA.8 with pinCMx 19 on package pin 16 */
+/* Defines for E1A: GPIOA.0 with pinCMx 1 on package pin 33 */
 // pins affected by this interrupt request:["E1A","E1B"]
 #define GPIO_ENCODER_INT_IRQN                                   (GPIOA_INT_IRQn)
 #define GPIO_ENCODER_INT_IIDX                   (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
-#define GPIO_ENCODER_E1A_IIDX                                (DL_GPIO_IIDX_DIO8)
-#define GPIO_ENCODER_E1A_PIN                                     (DL_GPIO_PIN_8)
-#define GPIO_ENCODER_E1A_IOMUX                                   (IOMUX_PINCM19)
-/* Defines for E1B: GPIOA.9 with pinCMx 20 on package pin 17 */
-#define GPIO_ENCODER_E1B_IIDX                                (DL_GPIO_IIDX_DIO9)
-#define GPIO_ENCODER_E1B_PIN                                     (DL_GPIO_PIN_9)
-#define GPIO_ENCODER_E1B_IOMUX                                   (IOMUX_PINCM20)
+#define GPIO_ENCODER_E1A_IIDX                                (DL_GPIO_IIDX_DIO0)
+#define GPIO_ENCODER_E1A_PIN                                     (DL_GPIO_PIN_0)
+#define GPIO_ENCODER_E1A_IOMUX                                    (IOMUX_PINCM1)
+/* Defines for E1B: GPIOA.1 with pinCMx 2 on package pin 34 */
+#define GPIO_ENCODER_E1B_IIDX                                (DL_GPIO_IIDX_DIO1)
+#define GPIO_ENCODER_E1B_PIN                                     (DL_GPIO_PIN_1)
+#define GPIO_ENCODER_E1B_IOMUX                                    (IOMUX_PINCM2)
+/* Defines for AIN1: GPIOA.27 with pinCMx 60 on package pin 31 */
+#define GPIO_TB6612_AIN1_PORT                                            (GPIOA)
+#define GPIO_TB6612_AIN1_PIN                                    (DL_GPIO_PIN_27)
+#define GPIO_TB6612_AIN1_IOMUX                                   (IOMUX_PINCM60)
+/* Defines for AIN2: GPIOA.25 with pinCMx 55 on package pin 26 */
+#define GPIO_TB6612_AIN2_PORT                                            (GPIOA)
+#define GPIO_TB6612_AIN2_PIN                                    (DL_GPIO_PIN_25)
+#define GPIO_TB6612_AIN2_IOMUX                                   (IOMUX_PINCM55)
+/* Defines for STBY: GPIOB.0 with pinCMx 12 on package pin 47 */
+#define GPIO_TB6612_STBY_PORT                                            (GPIOB)
+#define GPIO_TB6612_STBY_PIN                                     (DL_GPIO_PIN_0)
+#define GPIO_TB6612_STBY_IOMUX                                   (IOMUX_PINCM12)
 
 /* clang-format on */
 
@@ -128,6 +154,7 @@ void SYSCFG_DL_init(void);
 void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
+void SYSCFG_DL_PWMA_init(void);
 void SYSCFG_DL_TIMER_TICK_init(void);
 void SYSCFG_DL_UART_0_init(void);
 

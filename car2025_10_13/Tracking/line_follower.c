@@ -8,7 +8,7 @@
 #include "mpu6050.h"
 
 // 传感器数据缓冲区
-static unsigned char IRbuf[1];
+unsigned char IRbuf[1];
 
 float out;
 float out1;
