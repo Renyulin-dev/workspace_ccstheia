@@ -4,6 +4,7 @@
 #ifndef _CLOCK_H_
 #define _CLOCK_H_
 
+#define delay_ms  mspm0_delay_ms
 
 extern volatile unsigned long tick_ms;
 

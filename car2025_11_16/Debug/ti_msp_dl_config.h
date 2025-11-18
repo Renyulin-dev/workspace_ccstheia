@@ -128,6 +128,14 @@ extern "C" {
 
 
 
+/* Defines for TIMER_TICK */
+#define TIMER_TICK_INST                                                  (TIMG0)
+#define TIMER_TICK_INST_IRQHandler                              TIMG0_IRQHandler
+#define TIMER_TICK_INST_INT_IRQN                                (TIMG0_INT_IRQn)
+#define TIMER_TICK_INST_LOAD_VALUE                                       (9999U)
+
+
+
 
 /* Defines for I2C_BUS */
 #define I2C_BUS_INST                                                        I2C0
@@ -190,7 +198,7 @@ extern "C" {
 
 /* Defines for PIN_INT: GPIOA.17 with pinCMx 39 on package pin 10 */
 // groups represented: ["GPIO_ENCODER","GPIO_KEYS","GPIO_MPU6050"]
-// pins affected: ["E1A","E2B","KEY2","KEY3","PIN_INT"]
+// pins affected: ["E1A","E1B","E2A","E2B","KEY2","KEY3","PIN_INT"]
 #define GPIO_MULTIPLE_GPIOA_INT_IRQN                            (GPIOA_INT_IRQn)
 #define GPIO_MULTIPLE_GPIOA_INT_IIDX            (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
 #define GPIO_MPU6050_PIN_INT_IIDX                           (DL_GPIO_IIDX_DIO17)
@@ -221,10 +229,12 @@ extern "C" {
 #define GPIO_ENCODER_E1A_IOMUX                                    (IOMUX_PINCM1)
 /* Defines for E1B: GPIOA.1 with pinCMx 2 on package pin 34 */
 #define GPIO_ENCODER_E1B_PORT                                            (GPIOA)
+#define GPIO_ENCODER_E1B_IIDX                                (DL_GPIO_IIDX_DIO1)
 #define GPIO_ENCODER_E1B_PIN                                     (DL_GPIO_PIN_1)
 #define GPIO_ENCODER_E1B_IOMUX                                    (IOMUX_PINCM2)
 /* Defines for E2A: GPIOA.8 with pinCMx 19 on package pin 54 */
 #define GPIO_ENCODER_E2A_PORT                                            (GPIOA)
+#define GPIO_ENCODER_E2A_IIDX                                (DL_GPIO_IIDX_DIO8)
 #define GPIO_ENCODER_E2A_PIN                                     (DL_GPIO_PIN_8)
 #define GPIO_ENCODER_E2A_IOMUX                                   (IOMUX_PINCM19)
 /* Defines for E2B: GPIOA.9 with pinCMx 20 on package pin 55 */
@@ -287,6 +297,7 @@ void SYSCFG_DL_PWMA_init(void);
 void SYSCFG_DL_PWMB_init(void);
 void SYSCFG_DL_PWMC_init(void);
 void SYSCFG_DL_PWMD_init(void);
+void SYSCFG_DL_TIMER_TICK_init(void);
 void SYSCFG_DL_I2C_BUS_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 void SYSCFG_DL_UART_0_init(void);

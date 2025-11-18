@@ -23,6 +23,9 @@ void SysTick_Init(void)
 {
     DL_SYSTICK_config(CPUCLK_FREQ/1000);
     NVIC_SetPriority(SysTick_IRQn, 0);
+    NVIC_ClearPendingIRQ(TIMER_TICK_INST_INT_IRQN);
+	NVIC_EnableIRQ(TIMER_TICK_INST_INT_IRQN);
+	DL_TimerG_startCounter(TIMER_TICK_INST);
 }
 
 

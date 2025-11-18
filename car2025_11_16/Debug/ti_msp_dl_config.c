@@ -57,12 +57,14 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_PWMB_init();
     SYSCFG_DL_PWMC_init();
     SYSCFG_DL_PWMD_init();
+    SYSCFG_DL_TIMER_TICK_init();
     SYSCFG_DL_I2C_BUS_init();
     SYSCFG_DL_I2C_MPU6050_init();
     SYSCFG_DL_UART_0_init();
     /* Ensure backup structures have no valid state */
 	gPWMBBackup.backupRdy 	= false;
 	gPWMDBackup.backupRdy 	= false;
+
 
 
 }
@@ -99,6 +101,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerG_reset(PWMB_INST);
     DL_TimerG_reset(PWMC_INST);
     DL_TimerG_reset(PWMD_INST);
+    DL_TimerG_reset(TIMER_TICK_INST);
     DL_I2C_reset(I2C_BUS_INST);
     DL_I2C_reset(I2C_MPU6050_INST);
     DL_UART_Main_reset(UART_0_INST);
@@ -109,6 +112,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerG_enablePower(PWMB_INST);
     DL_TimerG_enablePower(PWMC_INST);
     DL_TimerG_enablePower(PWMD_INST);
+    DL_TimerG_enablePower(TIMER_TICK_INST);
     DL_I2C_enablePower(I2C_BUS_INST);
     DL_I2C_enablePower(I2C_MPU6050_INST);
     DL_UART_Main_enablePower(UART_0_INST);
@@ -171,9 +175,11 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 
     DL_GPIO_initDigitalInput(GPIO_ENCODER_E1A_IOMUX);
 
-    DL_GPIO_initDigitalOutput(GPIO_ENCODER_E1B_IOMUX);
+    DL_GPIO_initDigitalInput(GPIO_ENCODER_E1B_IOMUX);
 
-    DL_GPIO_initDigitalOutput(GPIO_ENCODER_E2A_IOMUX);
+    DL_GPIO_initDigitalInputFeatures(GPIO_ENCODER_E2A_IOMUX,
+		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_NONE,
+		 DL_GPIO_HYSTERESIS_DISABLE, DL_GPIO_WAKEUP_DISABLE);
 
     DL_GPIO_initDigitalInputFeatures(GPIO_ENCODER_E2B_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_NONE,
@@ -211,24 +217,26 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_NONE,
 		 DL_GPIO_HYSTERESIS_DISABLE, DL_GPIO_WAKEUP_DISABLE);
 
-    DL_GPIO_clearPins(GPIOA, BEEP_beep_PIN |
-		GPIO_ENCODER_E1B_PIN |
-		GPIO_ENCODER_E2A_PIN);
-    DL_GPIO_enableOutput(GPIOA, BEEP_beep_PIN |
-		GPIO_ENCODER_E1B_PIN |
-		GPIO_ENCODER_E2A_PIN);
+    DL_GPIO_clearPins(GPIOA, BEEP_beep_PIN);
+    DL_GPIO_enableOutput(GPIOA, BEEP_beep_PIN);
     DL_GPIO_setLowerPinsPolarity(GPIOA, DL_GPIO_PIN_0_EDGE_RISE |
+		DL_GPIO_PIN_1_EDGE_RISE |
+		DL_GPIO_PIN_8_EDGE_RISE |
 		DL_GPIO_PIN_9_EDGE_RISE |
 		DL_GPIO_PIN_13_EDGE_RISE);
     DL_GPIO_setUpperPinsPolarity(GPIOA, DL_GPIO_PIN_17_EDGE_FALL |
 		DL_GPIO_PIN_29_EDGE_RISE);
     DL_GPIO_clearInterruptStatus(GPIOA, GPIO_MPU6050_PIN_INT_PIN |
 		GPIO_ENCODER_E1A_PIN |
+		GPIO_ENCODER_E1B_PIN |
+		GPIO_ENCODER_E2A_PIN |
 		GPIO_ENCODER_E2B_PIN |
 		GPIO_KEYS_KEY2_PIN |
 		GPIO_KEYS_KEY3_PIN);
     DL_GPIO_enableInterrupt(GPIOA, GPIO_MPU6050_PIN_INT_PIN |
 		GPIO_ENCODER_E1A_PIN |
+		GPIO_ENCODER_E1B_PIN |
+		GPIO_ENCODER_E2A_PIN |
 		GPIO_ENCODER_E2B_PIN |
 		GPIO_KEYS_KEY2_PIN |
 		GPIO_KEYS_KEY3_PIN);
@@ -472,6 +480,46 @@ SYSCONFIG_WEAK void SYSCFG_DL_PWMD_init(void) {
 
     
     DL_TimerG_setCCPDirection(PWMD_INST , DL_TIMER_CC1_OUTPUT );
+
+
+}
+
+
+
+/*
+ * Timer clock configuration to be sourced by BUSCLK /  (5000000 Hz)
+ * timerClkFreq = (timerClkSrc / (timerClkDivRatio * (timerClkPrescale + 1)))
+ *   500000 Hz = 5000000 Hz / (8 * (9 + 1))
+ */
+static const DL_TimerG_ClockConfig gTIMER_TICKClockConfig = {
+    .clockSel    = DL_TIMER_CLOCK_BUSCLK,
+    .divideRatio = DL_TIMER_CLOCK_DIVIDE_8,
+    .prescale    = 9U,
+};
+
+/*
+ * Timer load value (where the counter starts from) is calculated as (timerPeriod * timerClockFreq) - 1
+ * TIMER_TICK_INST_LOAD_VALUE = (20 ms * 500000 Hz) - 1
+ */
+static const DL_TimerG_TimerConfig gTIMER_TICKTimerConfig = {
+    .period     = TIMER_TICK_INST_LOAD_VALUE,
+    .timerMode  = DL_TIMER_TIMER_MODE_PERIODIC,
+    .startTimer = DL_TIMER_START,
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_TIMER_TICK_init(void) {
+
+    DL_TimerG_setClockConfig(TIMER_TICK_INST,
+        (DL_TimerG_ClockConfig *) &gTIMER_TICKClockConfig);
+
+    DL_TimerG_initTimerMode(TIMER_TICK_INST,
+        (DL_TimerG_TimerConfig *) &gTIMER_TICKTimerConfig);
+    DL_TimerG_enableInterrupt(TIMER_TICK_INST , DL_TIMERG_INTERRUPT_ZERO_EVENT);
+	NVIC_SetPriority(TIMER_TICK_INST_INT_IRQN, 0);
+    DL_TimerG_enableClock(TIMER_TICK_INST);
+
+
+
 
 
 }

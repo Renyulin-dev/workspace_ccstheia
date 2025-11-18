@@ -53,9 +53,15 @@ int main(void)
     u8g2_t u8g2;
     u8g2Init(&u8g2);
     // Calibration_waiting(&u8g2); //陀螺仪校准
+    DL_GPIO_setPins(BEEP_PORT, BEEP_beep_PIN);
+    delay_ms(1000);
+    DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN);
+
     while(1)
     {
+
         DIRECTORY_control(&u8g2);
+        printf("count :%d,dir :%d,temp_count :%lld\n",get_encoder_count(),get_encoder_dir(),get_encoder_temp_count());
         //if(stop_flag)car_stop();
         //else c_control();
     }
