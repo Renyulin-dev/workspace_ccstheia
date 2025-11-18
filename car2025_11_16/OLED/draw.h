@@ -10,6 +10,8 @@
 #include "u8g2.h"
 #include "stdbool.h"
 
+ //------------BEEP---------------//
+#define BEEP(v)  (v ? DL_GPIO_setPins(BEEP_PORT, BEEP_beep_PIN) : DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN))
 
 extern int car_speed;
 extern int now_speed;

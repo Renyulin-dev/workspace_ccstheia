@@ -33,17 +33,13 @@
 
 void MSPM0_Init(){
     SYSCFG_DL_init();
-    DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY1_PORT, GPIO_KEYS_KEY1_PIN);
-    DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY2_PORT, GPIO_KEYS_KEY2_PIN);
-    DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY3_PORT, GPIO_KEYS_KEY3_PIN);
-    DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY4_PORT, GPIO_KEYS_KEY4_PIN);
-    DL_GPIO_clearInterruptStatus(GPIO_MPU6050_PORT, GPIO_MPU6050_PIN_INT_PIN);
-    NVIC_EnableIRQ(GPIOA_INT_IRQn);
-    NVIC_EnableIRQ(GPIOB_INT_IRQn);
     SysTick_Init();
     MPU6050_Init();
     UART_Init();
-    
+    NVIC_ClearPendingIRQ(GPIOA_INT_IRQn);
+	NVIC_ClearPendingIRQ(GPIOB_INT_IRQn);
+    NVIC_EnableIRQ(GPIOA_INT_IRQn);
+    NVIC_EnableIRQ(GPIOB_INT_IRQn);
 }
 
 int main(void)
@@ -52,10 +48,7 @@ int main(void)
     MSPM0_Init();
     u8g2_t u8g2;
     u8g2Init(&u8g2);
-    // Calibration_waiting(&u8g2); //陀螺仪校准
-    DL_GPIO_setPins(BEEP_PORT, BEEP_beep_PIN);
-    delay_ms(1000);
-    DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN);
+    Calibration_waiting(&u8g2); //陀螺仪校准
 
     while(1)
     {

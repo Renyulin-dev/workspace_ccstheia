@@ -89,8 +89,9 @@ void Calibration_waiting(u8g2_t *u8g2)
         }while (u8g2_NextPage(u8g2));
         mspm0_get_clock_ms(&times);
     }
-    DL_GPIO_setPins(BEEP_PORT, BEEP_beep_PIN);
-    mspm0_delay_ms(1000);
+    BEEP(1);
+    delay_ms(1000);
+    BEEP(0);
     DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN);
 }
 
