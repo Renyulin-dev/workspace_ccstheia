@@ -469,7 +469,7 @@ void c_control(void)
         gyro_l_num = 0;
         gyro_r_num = 0;
         
-        mspm0_delay_ms(100);
-        DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN); // 关闭蜂鸣器
+        delay_ms(100);
+        BEEP(0); // 关闭蜂鸣器
     }
 }

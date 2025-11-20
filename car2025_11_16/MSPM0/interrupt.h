@@ -17,8 +17,8 @@ typedef struct {
 
 extern int nextway;//-1向上移动,1向下移动,2进入下一目录/启动应用,3返回上一级
 
-int get_encoder_count(void);
-ENCODER_DIR get_encoder_dir(void);
-volatile long long get_encoder_temp_count(void);
+int get_encoder_count(char encoder_name);
+ENCODER_DIR get_encoder_dir(char encoder_name);
+volatile long long get_encoder_temp_count(char encoder_name);
 
 #endif  /* #ifndef _INTERRUPT_H_ */

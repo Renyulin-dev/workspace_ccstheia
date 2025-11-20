@@ -44,22 +44,20 @@ void MSPM0_Init(){
 
 int main(void)
 {
-    P = 40.0, I = 3.0, D = 40;
+    P = 4.0, I = 0.3, D = 4.0;
     MSPM0_Init();
     u8g2_t u8g2;
     u8g2Init(&u8g2);
-    //Calibration_waiting(&u8g2); //陀螺仪校准
+    Calibration_waiting(&u8g2); //陀螺仪校准
 
     
     DL_GPIO_setPins(GPIO_MOTOR_STBY_PORT, GPIO_MOTOR_STBY_PIN);
+    // DL_GPIO_clearPins(GPIO_MOTOR_STBY_PORT, GPIO_MOTOR_STBY_PIN);
     while(1)
     {
-        // printf("count :%d,dir :%d,temp_count :%lld",
-        //     get_encoder_count(),get_encoder_dir(),get_encoder_temp_count());
-        MOTOR_CONTROL(0, 0, 0, 0);
         DIRECTORY_control(&u8g2);
-        //if(stop_flag)car_stop();
-        //else c_control();
+        if(stop_flag)car_stop();
+        else c_control();
     }
 }
 

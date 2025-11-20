@@ -127,7 +127,7 @@ void quanshukongzi(void){
     }
 }
 
-int xspeed = 180;
+int xspeed = 20;
 
 void CAR_control(void){
     switch (id[1][0]+id[1][1]) {
