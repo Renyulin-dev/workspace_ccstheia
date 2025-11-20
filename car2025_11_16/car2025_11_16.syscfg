@@ -15,6 +15,7 @@ const GPIO2  = GPIO.addInstance();
 const GPIO3  = GPIO.addInstance();
 const GPIO4  = GPIO.addInstance();
 const GPIO5  = GPIO.addInstance();
+const GPIO6  = GPIO.addInstance();
 const I2C    = scripting.addModule("/ti/driverlib/I2C", {}, false);
 const I2C1   = I2C.addInstance();
 const I2C2   = I2C.addInstance();
@@ -28,6 +29,7 @@ const TIMER  = scripting.addModule("/ti/driverlib/TIMER", {}, false);
 const TIMER1 = TIMER.addInstance();
 const UART   = scripting.addModule("/ti/driverlib/UART", {}, false);
 const UART1  = UART.addInstance();
+const UART2  = UART.addInstance();
 
 /**
  * Write custom configuration values to the imported modules.
@@ -153,6 +155,27 @@ GPIO5.associatedPins[0].interruptPriority = "1";
 GPIO5.associatedPins[0].polarity          = "FALL";
 GPIO5.associatedPins[0].pin.$assign       = "PA17";
 
+GPIO6.$name                         = "GPIO_MOTOR";
+GPIO6.associatedPins.create(9);
+GPIO6.associatedPins[0].$name       = "AIN1";
+GPIO6.associatedPins[0].pin.$assign = "PA27";
+GPIO6.associatedPins[1].$name       = "AIN2";
+GPIO6.associatedPins[1].pin.$assign = "PA25";
+GPIO6.associatedPins[2].$name       = "BIN1";
+GPIO6.associatedPins[2].pin.$assign = "PB25";
+GPIO6.associatedPins[3].$name       = "BIN2";
+GPIO6.associatedPins[3].pin.$assign = "PB20";
+GPIO6.associatedPins[4].$name       = "CIN1";
+GPIO6.associatedPins[4].pin.$assign = "PA14";
+GPIO6.associatedPins[5].$name       = "CIN2";
+GPIO6.associatedPins[5].pin.$assign = "PA16";
+GPIO6.associatedPins[6].$name       = "DIN1";
+GPIO6.associatedPins[6].pin.$assign = "PB17";
+GPIO6.associatedPins[7].$name       = "DIN2";
+GPIO6.associatedPins[7].pin.$assign = "PB19";
+GPIO6.associatedPins[8].$name       = "STBY";
+GPIO6.associatedPins[8].pin.$assign = "PB0";
+
 I2C1.$name                             = "I2C_BUS";
 I2C1.basicEnableController             = true;
 I2C1.basicControllerStandardBusSpeed   = "Fast";
@@ -250,14 +273,27 @@ TIMER1.interrupts         = ["ZERO"];
 TIMER1.interruptPriority  = "0";
 TIMER1.peripheral.$assign = "TIMG0";
 
-UART1.$name                    = "UART_0";
-UART1.uartClkSrc               = "MFCLK";
-UART1.enabledInterrupts        = ["RX"];
-UART1.peripheral.$assign       = "UART0";
-UART1.peripheral.rxPin.$assign = "PA11";
-UART1.peripheral.txPin.$assign = "PA10";
-UART1.txPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric11";
-UART1.rxPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric12";
+UART1.$name                        = "UART_0";
+UART1.uartClkSrc                   = "MFCLK";
+UART1.enabledInterrupts            = ["RX"];
+UART1.peripheral.$assign           = "UART0";
+UART1.peripheral.rxPin.$assign     = "PA11";
+UART1.peripheral.txPin.$assign     = "PA10";
+UART1.txPinConfig.$name            = "ti_driverlib_gpio_GPIOPinGeneric11";
+UART1.txPinConfig.internalResistor = "PULL_UP";
+UART1.rxPinConfig.$name            = "ti_driverlib_gpio_GPIOPinGeneric12";
+
+UART2.$name                        = "UART_1";
+UART2.enabledInterrupts            = ["RX"];
+UART2.peripheral.$assign           = "UART3";
+UART2.peripheral.rxPin.$assign     = "PB13";
+UART2.peripheral.txPin.$assign     = "PB12";
+UART2.txPinConfig.$name            = "ti_driverlib_gpio_GPIOPinGeneric2";
+UART2.txPinConfig.enableConfig     = true;
+UART2.txPinConfig.internalResistor = "PULL_UP";
+UART2.rxPinConfig.$name            = "ti_driverlib_gpio_GPIOPinGeneric3";
+UART2.rxPinConfig.enableConfig     = true;
+UART2.rxPinConfig.internalResistor = "PULL_UP";
 
 const ProjectConfig              = scripting.addModule("/ti/project_config/ProjectConfig", {}, false);
 ProjectConfig.migrationCondition = true;

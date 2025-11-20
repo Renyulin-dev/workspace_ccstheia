@@ -1,7 +1,7 @@
 ******************************************************************************
             TI ARM Clang Linker PC v4.0.3                      
 ******************************************************************************
->> Linked Thu Nov 13 18:52:57 2025
+>> Linked Wed Nov 19 23:00:58 2025
 
 OUTPUT FILE NAME:   <TICK.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000153d

@@ -80,7 +80,8 @@ MSPM0/electrical_machinery.o: ../MSPM0/electrical_machinery.c \
  C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/draw.h \
  C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/u8g2.h \
  C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/u8x8.h \
- C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/chinesetxt.h
+ C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/chinesetxt.h \
+ ../MSPM0/interrupt.h
 ../MSPM0/electrical_machinery.h:
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_04_00_06/source/ti/devices/msp/msp.h:
@@ -161,3 +162,4 @@ C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/draw.h:
 C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/u8g2.h:
 C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/u8x8.h:
 C:/Users/renyu/workspace_ccstheia/car2025_11_16/OLED/csrc/chinesetxt.h:
+../MSPM0/interrupt.h:

@@ -54,7 +54,7 @@ int main(void)
     DL_GPIO_setPins(GPIO_TB6612_AIN2_PORT, GPIO_TB6612_AIN2_PIN);
     while (1)
 	{   
-        car_speed(Velocity_A(40,get_encoder_count()));
+        car_speed(Velocity_A(70,get_encoder_count()));
 		printf("count :%d,dir :%d,temp_count :%lld\n",get_encoder_count(),get_encoder_dir(),get_encoder_temp_count());
         delay_ms(99);
     }

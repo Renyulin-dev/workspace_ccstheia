@@ -9,4 +9,6 @@ void car_stop();
 extern int MAX;
 extern int MIN;
 
+void MOTOR_CONTROL(int TargetVelocity_A, int TargetVelocity_B, int TargetVelocity_C, int TargetVelocity_D);
+
 #endif

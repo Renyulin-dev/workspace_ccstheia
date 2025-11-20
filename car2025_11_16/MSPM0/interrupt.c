@@ -42,64 +42,55 @@ void TIMER_TICK_INST_IRQHandler(void)
 
 void GROUP1_IRQHandler(void)
 {
-    // pins affected: ["KEY2","KEY3","PIN_INT"]
-    uint32_t gpioA = DL_GPIO_getEnabledInterruptStatus(GPIOA, 
-        GPIO_KEYS_KEY2_PIN | GPIO_KEYS_KEY3_PIN | GPIO_MPU6050_PIN_INT_PIN |
-        GPIO_ENCODER_E1A_PIN | GPIO_ENCODER_E1B_PIN);
-
-    if ((gpioA & GPIO_KEYS_KEY2_PIN) == GPIO_KEYS_KEY2_PIN){
-        nextway = 1;
-        DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY2_PORT, GPIO_KEYS_KEY2_PIN);
-    }
-
-    if ((gpioA & GPIO_KEYS_KEY3_PIN) == GPIO_KEYS_KEY3_PIN){
-        nextway = 2;
-        DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY3_PORT, GPIO_KEYS_KEY3_PIN);
-    }
-
-    if ((gpioA & GPIO_MPU6050_PIN_INT_PIN) == GPIO_MPU6050_PIN_INT_PIN){
-        Read_Quad();
-        DL_GPIO_clearInterruptStatus(GPIOB, GPIO_MPU6050_PIN_INT_PIN);
-    }
-
-    if((gpioA & GPIO_ENCODER_E1A_PIN) == GPIO_ENCODER_E1A_PIN)
-	{
-		//如果在A相上升沿下，B相为低电平
-		if(!DL_GPIO_readPins(GPIO_ENCODER_E1B_PORT,GPIO_ENCODER_E1B_PIN))
-		{
-			motor_encoder.temp_count--;
-		}
-		else
-		{
-			motor_encoder.temp_count++;
-		}
-        DL_GPIO_clearInterruptStatus(GPIOA,GPIO_ENCODER_E1A_PIN|GPIO_ENCODER_E1B_PIN);
-	}//编码器B相上升沿触发
-	else if((gpioA & GPIO_ENCODER_E1B_PIN)==GPIO_ENCODER_E1B_PIN)
-	{
-		//如果在B相上升沿下，A相为低电平
-		if(!DL_GPIO_readPins(GPIO_ENCODER_E1A_PORT,GPIO_ENCODER_E1A_PIN))
-		{
-			motor_encoder.temp_count++;
-		}
-		else
-		{
-			motor_encoder.temp_count--;
-		}
-        DL_GPIO_clearInterruptStatus(GPIOA,GPIO_ENCODER_E1A_PIN|GPIO_ENCODER_E1B_PIN);
-	}
-
-    // pins affected by this interrupt request:["KEY1","KEY4"]
-    uint32_t gpioB = DL_GPIO_getEnabledInterruptStatus(GPIOB,
-        GPIO_KEYS_KEY1_PIN | GPIO_KEYS_KEY4_PIN);
-
-    if ((gpioB & GPIO_KEYS_KEY1_PIN) == GPIO_KEYS_KEY1_PIN){
-        nextway = -1;
-        DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY1_PORT, GPIO_KEYS_KEY1_PIN);
-    }
-
-    if ((gpioB & GPIO_KEYS_KEY4_PIN) == GPIO_KEYS_KEY4_PIN){
-        nextway = 3;
-        DL_GPIO_clearInterruptStatus(GPIO_KEYS_KEY4_PORT, GPIO_KEYS_KEY4_PIN);
+    switch (DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1))
+    {
+        case DL_INTERRUPT_GROUP1_IIDX_GPIOA:
+            switch (DL_GPIO_getPendingInterrupt(GPIOA)) {
+                case GPIO_KEYS_KEY2_IIDX:
+                    nextway = 1;
+                    break;
+                case GPIO_KEYS_KEY3_IIDX:
+                    nextway = 2;
+                    break;
+                case GPIO_MPU6050_PIN_INT_IIDX:
+                    Read_Quad();
+                    break;
+                case GPIO_ENCODER_E1A_IIDX:
+                    if(!DL_GPIO_readPins(GPIOA, GPIO_ENCODER_E1B_PIN))
+                    {
+                        motor_encoder.temp_count--;
+                    }
+                    else
+                    {
+                        motor_encoder.temp_count++;
+                    }
+                    break;
+                case GPIO_ENCODER_E1B_IIDX:
+                	if(!DL_GPIO_readPins(GPIOA, GPIO_ENCODER_E1A_PIN))
+                    {
+                        motor_encoder.temp_count++;
+                    }
+                    else
+                    {
+                        motor_encoder.temp_count--;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        case DL_INTERRUPT_GROUP1_IIDX_GPIOB:
+            switch (DL_GPIO_getPendingInterrupt(GPIOB))
+            {
+                case GPIO_KEYS_KEY1_IIDX:
+                    nextway = -1;
+                    break;
+                case GPIO_KEYS_KEY4_IIDX:
+                    nextway = 3;
+                    break;
+                default:
+                    break;
+            }
+        default:
+            break;
     }
 }

@@ -182,6 +182,22 @@ extern "C" {
 #define UART_0_BAUD_RATE                                                  (9600)
 #define UART_0_IBRD_4_MHZ_9600_BAUD                                         (26)
 #define UART_0_FBRD_4_MHZ_9600_BAUD                                          (3)
+/* Defines for UART_1 */
+#define UART_1_INST                                                        UART3
+#define UART_1_INST_FREQUENCY                                           80000000
+#define UART_1_INST_IRQHandler                                  UART3_IRQHandler
+#define UART_1_INST_INT_IRQN                                      UART3_INT_IRQn
+#define GPIO_UART_1_RX_PORT                                                GPIOB
+#define GPIO_UART_1_TX_PORT                                                GPIOB
+#define GPIO_UART_1_RX_PIN                                        DL_GPIO_PIN_13
+#define GPIO_UART_1_TX_PIN                                        DL_GPIO_PIN_12
+#define GPIO_UART_1_IOMUX_RX                                     (IOMUX_PINCM30)
+#define GPIO_UART_1_IOMUX_TX                                     (IOMUX_PINCM29)
+#define GPIO_UART_1_IOMUX_RX_FUNC                      IOMUX_PINCM30_PF_UART3_RX
+#define GPIO_UART_1_IOMUX_TX_FUNC                      IOMUX_PINCM29_PF_UART3_TX
+#define UART_1_BAUD_RATE                                                  (9600)
+#define UART_1_IBRD_80_MHZ_9600_BAUD                                       (520)
+#define UART_1_FBRD_80_MHZ_9600_BAUD                                        (53)
 
 
 
@@ -286,6 +302,42 @@ extern "C" {
 #define GPIO_KEYS_KEY4_IIDX                                  (DL_GPIO_IIDX_DIO1)
 #define GPIO_KEYS_KEY4_PIN                                       (DL_GPIO_PIN_1)
 #define GPIO_KEYS_KEY4_IOMUX                                     (IOMUX_PINCM13)
+/* Defines for AIN1: GPIOA.27 with pinCMx 60 on package pin 31 */
+#define GPIO_MOTOR_AIN1_PORT                                             (GPIOA)
+#define GPIO_MOTOR_AIN1_PIN                                     (DL_GPIO_PIN_27)
+#define GPIO_MOTOR_AIN1_IOMUX                                    (IOMUX_PINCM60)
+/* Defines for AIN2: GPIOA.25 with pinCMx 55 on package pin 26 */
+#define GPIO_MOTOR_AIN2_PORT                                             (GPIOA)
+#define GPIO_MOTOR_AIN2_PIN                                     (DL_GPIO_PIN_25)
+#define GPIO_MOTOR_AIN2_IOMUX                                    (IOMUX_PINCM55)
+/* Defines for BIN1: GPIOB.25 with pinCMx 56 on package pin 27 */
+#define GPIO_MOTOR_BIN1_PORT                                             (GPIOB)
+#define GPIO_MOTOR_BIN1_PIN                                     (DL_GPIO_PIN_25)
+#define GPIO_MOTOR_BIN1_IOMUX                                    (IOMUX_PINCM56)
+/* Defines for BIN2: GPIOB.20 with pinCMx 48 on package pin 19 */
+#define GPIO_MOTOR_BIN2_PORT                                             (GPIOB)
+#define GPIO_MOTOR_BIN2_PIN                                     (DL_GPIO_PIN_20)
+#define GPIO_MOTOR_BIN2_IOMUX                                    (IOMUX_PINCM48)
+/* Defines for CIN1: GPIOA.14 with pinCMx 36 on package pin 7 */
+#define GPIO_MOTOR_CIN1_PORT                                             (GPIOA)
+#define GPIO_MOTOR_CIN1_PIN                                     (DL_GPIO_PIN_14)
+#define GPIO_MOTOR_CIN1_IOMUX                                    (IOMUX_PINCM36)
+/* Defines for CIN2: GPIOA.16 with pinCMx 38 on package pin 9 */
+#define GPIO_MOTOR_CIN2_PORT                                             (GPIOA)
+#define GPIO_MOTOR_CIN2_PIN                                     (DL_GPIO_PIN_16)
+#define GPIO_MOTOR_CIN2_IOMUX                                    (IOMUX_PINCM38)
+/* Defines for DIN1: GPIOB.17 with pinCMx 43 on package pin 14 */
+#define GPIO_MOTOR_DIN1_PORT                                             (GPIOB)
+#define GPIO_MOTOR_DIN1_PIN                                     (DL_GPIO_PIN_17)
+#define GPIO_MOTOR_DIN1_IOMUX                                    (IOMUX_PINCM43)
+/* Defines for DIN2: GPIOB.19 with pinCMx 45 on package pin 16 */
+#define GPIO_MOTOR_DIN2_PORT                                             (GPIOB)
+#define GPIO_MOTOR_DIN2_PIN                                     (DL_GPIO_PIN_19)
+#define GPIO_MOTOR_DIN2_IOMUX                                    (IOMUX_PINCM45)
+/* Defines for STBY: GPIOB.0 with pinCMx 12 on package pin 47 */
+#define GPIO_MOTOR_STBY_PORT                                             (GPIOB)
+#define GPIO_MOTOR_STBY_PIN                                      (DL_GPIO_PIN_0)
+#define GPIO_MOTOR_STBY_IOMUX                                    (IOMUX_PINCM12)
 
 /* clang-format on */
 
@@ -301,6 +353,7 @@ void SYSCFG_DL_TIMER_TICK_init(void);
 void SYSCFG_DL_I2C_BUS_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 void SYSCFG_DL_UART_0_init(void);
+void SYSCFG_DL_UART_1_init(void);
 
 
 bool SYSCFG_DL_saveConfiguration(void);

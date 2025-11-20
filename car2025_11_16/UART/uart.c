@@ -28,6 +28,7 @@ int fputs(const char* restrict s, FILE* restrict stream) {
     }
     return char_len;
 }
+
 int puts(const char* _ptr)
 {
  return 0;
@@ -41,13 +42,13 @@ void uart0_send_char(char ch)
     DL_UART_Main_transmitData(UART_0_INST, ch);
 }
 
-// void uart1_send_char(char ch)
-// {
-//     //当串口0忙的时候等待，不忙的时候再发送传进来的字符
-//     while( DL_UART_isBusy(UART_1_INST) == true );
-//     //发送单个字符
-//     DL_UART_Main_transmitData(UART_1_INST, ch);
-// }
+void uart1_send_char(char ch)
+{
+    //当串口0忙的时候等待，不忙的时候再发送传进来的字符
+    while( DL_UART_isBusy(UART_1_INST) == true );
+    //发送单个字符
+    DL_UART_Main_transmitData(UART_1_INST, ch);
+}
 
 //串口发送字符串
 void uart0_send_string(char* str)
@@ -60,25 +61,44 @@ void uart0_send_string(char* str)
     }
 }
 
-// void uart1_send_string(char* str)
-// {
-//     //当前字符串地址不在结尾 并且 字符串首地址不为空
-//     while(*str!=0&&str!=0)
-//     {
-//         //发送字符串首地址中的字符，并且在发送完成之后首地址自增
-//         uart1_send_char(*str++);
-//     }
-// }
+void uart1_send_string(char* str)
+{
+    //当前字符串地址不在结尾 并且 字符串首地址不为空
+    while(*str!=0&&str!=0)
+    {
+        //发送字符串首地址中的字符，并且在发送完成之后首地址自增
+        uart1_send_char(*str++);
+    }
+}
 
 void UART_Init(void)
 {
     NVIC_ClearPendingIRQ(UART_0_INST_INT_IRQN);
+    NVIC_ClearPendingIRQ(UART_1_INST_INT_IRQN);
     NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
+    NVIC_EnableIRQ(UART_1_INST_INT_IRQN);
     printf("UART Init is OK!!!");
 }
 
 //串口的中断服务函数
 void UART_0_INST_IRQHandler(void)
+{
+    //如果产生了串口中断
+    switch( DL_UART_getPendingInterrupt(UART_1_INST) )
+    {
+        case DL_UART_IIDX_RX://如果是接收中断
+            //将发送过来的数据保存在变量中
+            uart_data = DL_UART_Main_receiveData(UART_1_INST);
+            uart1_send_char(uart_data);
+            break;
+
+        default://其他的串口中断
+            break;
+    }
+}
+
+//串口的中断服务函数
+void UART_1_INST_IRQHandler(void)
 {
     //如果产生了串口中断
     switch( DL_UART_getPendingInterrupt(UART_0_INST) )
