@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "compare": "c",
+        "type_traits": "c",
+        "typeinfo": "c",
+        "mpu6050.h": "c",
+        "cmath": "c"
+    },
+    "CCS.debug.breakpoint.showCore": true
+}

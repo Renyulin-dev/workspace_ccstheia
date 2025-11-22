@@ -48,7 +48,7 @@ int main(void)
     MSPM0_Init();
     u8g2_t u8g2;
     u8g2Init(&u8g2);
-    Calibration_waiting(&u8g2); //陀螺仪校准
+    //Calibration_waiting(&u8g2); //陀螺仪校准
 
     
     DL_GPIO_setPins(GPIO_MOTOR_STBY_PORT, GPIO_MOTOR_STBY_PIN);

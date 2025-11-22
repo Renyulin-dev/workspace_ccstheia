@@ -27,7 +27,7 @@ static unsigned long now_time = 0; // 当前时间戳
 float car_straight_yaw;            // 直线行驶时的初始yaw角
 float car_begin_yaw;               // 行驶开始时的初始yaw角
 float angle_diff = 0;              // 角度变化值
-int MAX_CORRECTION = 150;          // 最大转弯修正值
+int MAX_CORRECTION = 30;          // 最大转弯修正值
 
 
 // 转弯修正系数

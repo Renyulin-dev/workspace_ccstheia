@@ -71,6 +71,15 @@
                 "name": "car2025_11_16",
                 "resourceId": "/car2025_11_16"
             }
+        },
+        {
+            "name": "car2025_11_22",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "car2025_11_22",
+                "resourceId": "/car2025_11_22"
+            }
         }
     ]
 }
