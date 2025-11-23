@@ -13,10 +13,11 @@
  //------------BEEP---------------//
 #define BEEP(v)  (v ? DL_GPIO_setPins(BEEP_PORT, BEEP_beep_PIN) : DL_GPIO_clearPins(BEEP_PORT, BEEP_beep_PIN))
 
-extern int base_speed;
-extern int differential;
+extern float kp, ki, kd;
+extern int8_t base_speed;
+extern int8_t differential;
 extern bool stop_flag;
-extern int number_of_turns;
+extern int8_t number_of_turns;
 
 void Calibration_waiting(u8g2_t *u8g2);
 void OLED_SHOW(u8g2_t *u8g2);

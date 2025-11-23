@@ -11,37 +11,42 @@
 //目录级数
 #define DIRECTORY 2
 
-int id[DIRECTORY][2];
-int directory_flag = 0;//当前处于几级目录:-2为二级控制,-1为二级显示,0为主目录,1为二级目录
+bool   stop_flag = true;
 
-int base_speed = 0;
-bool stop_flag = true;
-int differential = 0;
-int number_of_turns = 1;
+float pid_rate = 0.1;
+float kp = 7.0;
+float ki = 0.2;
+float kd = 0.5;
 
+int8_t id[DIRECTORY][2];
+int8_t directory_flag = 0;//当前处于几级目录:-2为二级控制,-1为二级显示,0为主目录,1为二级目录
+int8_t base_speed = 0;
+int8_t differential = 0;
+int8_t number_of_turns = 1;
+int8_t xspeed = 15;
 //存储目录信息
 char*** directory[]=
 {
     (char**[]){//一级目录
-        (char*[]){"速度控制","限速","圈数","PID","中边","other",NULL}
+        (char*[]){"速度控制","限速","圈数","PID","中边","激光模式",NULL}
     },
     (char**[]){//二级目录
         //一级目录下目录一对应二级目录
         (char*[]){"ON","OFF","speed+","speed-","trun+","trun-",NULL},
         (char*[]){"MIN+","MIN-","MAX+","MAX-",NULL},
         (char*[]){"0","1","2","3","4","5","!1!",NULL},
-        (char*[]){"P+","P-","I+","I-","D+","D-",NULL},
+        (char*[]){"rate+","rate-","kp+","kp-","ki+","ki-","kd+","kd-",NULL},
         (char*[]){"z1+","z1-","z2+","z2-","z3+","z3-","z4+","z4-",NULL},
         (char*[]){"PTZ_MODE=0","PTZ_MODE=1","PTZ_MODE=2","LASER_MODE=0","LASER_MODE=1","LASER_MODE=2",NULL}
     },
 };
 //存储每级目录项目数
-int* directory_num[]=
+int8_t* directory_num[]=
 {
     //一级目录项目数
-    (int[]){6,-1},
+    (int8_t[]){6,-1},
     //二级目录项目数
-    (int[]){6,4,7,6,8,6,-1}
+    (int8_t[]){6,4,7,8,8,6,-1}
 };
 
 void xianshuc(void){
@@ -66,7 +71,7 @@ void xianshuc(void){
 void Calibration_waiting(u8g2_t *u8g2)
 {   char oled_buffer[32];
     unsigned long times=1;
-    int ij[2]={0,0};
+    int8_t ij[2]={0,0};
     while(times<=18118){
         u8g2_ClearBuffer(u8g2);
         do{
@@ -97,60 +102,88 @@ void Calibration_waiting(u8g2_t *u8g2)
 
 void quanshukongzi(void){
     switch (id[1][0]+id[1][1]) {
-    case 0:
-        number_of_turns = 0;
-        break;
-    case 1:
-        number_of_turns = 1;
-        break;
-    case 2:
-        number_of_turns = 2;
-        break;
-    case 3:
-        number_of_turns = 3;
-        break;
-    case 4:
-        number_of_turns = 4;
-        break;
-    case 5:
-        number_of_turns = 5;
-        break;
-    case 6:
-        number_of_turns = 2;
-        break;
-    default:
-        break;
+        case 0:
+            number_of_turns = 0;
+            break;
+        case 1:
+            number_of_turns = 1;
+            break;
+        case 2:
+            number_of_turns = 2;
+            break;
+        case 3:
+            number_of_turns = 3;
+            break;
+        case 4:
+            number_of_turns = 4;
+            break;
+        case 5:
+            number_of_turns = 5;
+            break;
+        case 6:
+            number_of_turns = 2;
+            break;
+        default:
+            break;
     }
 }
-
-int xspeed = 15;
 
 void SPEED_CONTROL(void){
     switch (id[1][0]+id[1][1]) {
-    case 0:
-        stop_flag = false;
-        base_speed = xspeed;
-        differential = base_speed;
-        break;
-    case 1:
-        stop_flag = true;
-        break;
-    case 2:
-        xspeed += 10;
-        break;
-    case 3:
-        xspeed -= 10;
-        break;
-    case 4:
-        break;
-    case 5:
-        break;
-    default:
-        break;
+        case 0:
+            stop_flag = false;
+            base_speed = xspeed;
+            break;
+        case 1:
+            stop_flag = true;
+            break;
+        case 2:
+            xspeed += 10;
+            break;
+        case 3:
+            xspeed -= 10;
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        default:
+            break;
     }
 }
 
-void PID_control(void){
+void PID_CONTROL(void){
+    switch (id[1][0]+id[1][1]) {
+        case 0:
+            pid_rate += 0.1;
+            break;
+        case 1:
+            pid_rate -= 0.1;
+            if (pid_rate < 0)pid_rate = 0;
+            break;
+        case 2:
+            kp += pid_rate;
+            break;
+        case 3:
+            kp -= pid_rate;
+            if(kp < 0)kp = 0;
+            break;
+        case 4:
+            ki += pid_rate;
+            break;
+        case 5:
+            ki -= pid_rate;
+            if(ki < 0)ki = 0;
+            break;
+        case 6:
+            kd += pid_rate;
+            break;
+        case 7:
+            kd -= pid_rate;
+            if(kd < 0)kd = 0;
+        default:
+            break;
+    }
 }
 
 void other_control(void){
@@ -199,7 +232,7 @@ void HOME_directory(u8g2_t *u8g2) {
         if(id[0][0]+id[0][1]==0)SPEED_CONTROL();
         if(id[0][0]+id[0][1]==1)xianshuc();
         if(id[0][0]+id[0][1]==2)quanshukongzi();
-        if(id[0][0]+id[0][1]==3)PID_control();
+        if(id[0][0]+id[0][1]==3)PID_CONTROL();
         if(id[0][0]+id[0][1]==4)zb_control();
         if(id[0][0]+id[0][1]==5)other_control();
         directory_flag = 1;
@@ -240,6 +273,20 @@ void HOME_directory(u8g2_t *u8g2) {
             sprintf((char *)oled_buffer, "%d", number_of_turns);
             u8g2_DrawUTF8(u8g2, 100, 46, oled_buffer);
         }
+        if(id[0][0]+id[0][1]==3){
+            u8g2_DrawUTF8(u8g2, 65, 14, "rate:");
+            sprintf((char *)oled_buffer, "%.1f", pid_rate);
+            u8g2_DrawUTF8(u8g2, 100, 14, oled_buffer);
+            u8g2_DrawUTF8(u8g2, 75, 30, "kp:");
+            sprintf((char *)oled_buffer, "%.1f", kp);
+            u8g2_DrawUTF8(u8g2, 100, 30, oled_buffer);
+            u8g2_DrawUTF8(u8g2, 75, 46, "ki:");
+            sprintf((char *)oled_buffer, "%.1f", ki);
+            u8g2_DrawUTF8(u8g2, 100, 46, oled_buffer);
+            u8g2_DrawUTF8(u8g2, 75, 62, "kd:");
+            sprintf((char *)oled_buffer, "%.1f", kd);
+            u8g2_DrawUTF8(u8g2, 100, 62, oled_buffer);
+        }
     }
 
     // 动态渲染菜单项（根据滚动位置调整）
@@ -247,7 +294,7 @@ void HOME_directory(u8g2_t *u8g2) {
     if(directory_flag==0)u8g2_DrawUTF8(u8g2, 36, 14, "目录");
     if(directory_flag==1)u8g2_DrawUTF8(u8g2, 30, 14, directory[0][0][lasttopid+lastnowid]);
     u8g2_SetFont(u8g2, u8g2_font_unifont_st16);
-    for(int i = id[directory_flag][0]; i < id[directory_flag][0]+3; i++)
+    for(int8_t i = id[directory_flag][0]; i < id[directory_flag][0]+3; i++)
     {
         u8g2_DrawUTF8(u8g2, 0, 30 + 16 * i  - id[directory_flag][0] * 16, directory[directory_flag][lasttopid+lastnowid][i]);
     }

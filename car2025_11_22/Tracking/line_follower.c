@@ -10,6 +10,8 @@
 
 unsigned char IRbuf[2];
 uint8_t s1, s2, s3, s4, s5, s6, s7, s8;
+uint8_t out_num = 0;
+uint8_t actual_speed;
 
 static float error = 0, last_error = 0, integral = 0;
 
@@ -32,12 +34,14 @@ void line_follower_update(void)
 
 float line_folower(float kp, float ki, float kd)
 {
-    
+    actual_speed = base_speed;
 
     /* 1 1 1 1 1 1 1 1 */
     if (s1 && s2 && s3 && s4 && s5 && s6 && s7 && s8) 
     {
-        trun_flage = true;
+        out_num ++;
+        actual_speed = 0;
+        if(out_num >= 3)trun_flage = true;
         integral = 0;
         return 0;
     }
@@ -126,6 +130,8 @@ float line_folower(float kp, float ki, float kd)
     {
         left_flage = false;
     }
+
+    out_num = 0;
     
     integral += error;
     float output = kp * error + ki * integral + kd * (error - last_error);
@@ -146,15 +152,16 @@ void car_trun(int8_t trun_speed)
 void CAR_CONTROL(void)
 {
     line_follower_update();
+
     if(!trun_flage)
     {
-        car_run(base_speed, line_folower(5,1,0));
+        car_run(actual_speed, line_folower(kp, ki, kd));
     }
     else 
     {
         if(left_flage)
         {
-           car_trun(15); 
+            car_trun(15); 
         }
         else 
         {
